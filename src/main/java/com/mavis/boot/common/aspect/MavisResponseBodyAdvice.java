@@ -28,7 +28,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @Slf4j
 @Order(1)
 @ControllerAdvice
-public class MyResponseBodyAdvice implements ResponseBodyAdvice {
+public class MavisResponseBodyAdvice implements ResponseBodyAdvice {
 
 	/**
 	 * 包含项
