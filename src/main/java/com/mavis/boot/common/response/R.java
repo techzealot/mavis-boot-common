@@ -1,13 +1,15 @@
 package com.mavis.boot.common.response;
 
+import java.io.Serializable;
 import java.util.Collections;
 import lombok.Data;
 import lombok.experimental.Wither;
 
 @Data
 @Wither
-public class R<T> {
+public class R<T> implements Serializable {
 
+  private static final long serialVersionUID = 1234343454L;
   public static final int SUCCESS = 200;
   public static final int INTERNAL_ERROR = 500;
   public static final int NO_AUTHORITY = 401;
@@ -32,12 +34,7 @@ public class R<T> {
   }
 
   public static <T> R of(Integer status, String message, T data, Object attachment) {
-    R r = new R();
-    r.setStatus(status);
-    r.setMessage(message);
-    r.setData(data);
-    r.setAttachment(attachment);
-    return r;
+    return new R(status, message, data, attachment);
   }
 
   public static <T> R success(String message, T data, Object attachment) {
