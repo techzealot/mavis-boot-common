@@ -1,6 +1,7 @@
 package com.mavis.boot.common.aspect;
 
 import com.mavis.boot.common.annotation.NotAuthrnticated;
+import com.mavis.boot.common.api.TokenVerifier;
 import com.mavis.boot.common.util.CookieUtil;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,12 +13,17 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 /**
- * 接口调用权限校验
+ * 接口调用权限校验抽象类，实现验证token功能即可
  *
  * @date 2018/4/20
  */
-@Component
 public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
+
+  private TokenVerifier tokenVerifier;
+
+  public AccessTokenVerifyInterceptor(TokenVerifier tokenVerifier) {
+    this.tokenVerifier = tokenVerifier;
+  }
 
   public static final String TOKEN_NAME = "access_token";
 
@@ -57,8 +63,8 @@ public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
     return "";
   }
 
-  private boolean verifyToken(String token) {
-    //todo token验证,默认返回true
-    return true;
+  private boolean verifyToken(String token){
+    return tokenVerifier.verifyToken(token);
   }
+
 }
