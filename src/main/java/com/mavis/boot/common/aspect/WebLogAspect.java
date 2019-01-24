@@ -48,11 +48,6 @@ public class WebLogAspect {
     //获取方法签名
     MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
     Method method = methodSignature.getMethod();
-    //获取注解信息
-    WebLog webLog = null;
-    if (method.isAnnotationPresent(WebLog.class)) {
-      webLog = method.getAnnotation(WebLog.class);
-    }
     String methodName = method.getName();
     //开始计时
     stopWatch.start(methodName);
@@ -73,13 +68,8 @@ public class WebLogAspect {
         request = attributes.getRequest();
       }
       sb.append(MessageFormat.format("request info:{0} \n\t", request));
-      if (Objects.nonNull(webLog)) {
-        sb.append(MessageFormat
-            .format("WebLog info > value:{0},description:{1}", webLog.value(),
-                webLog.description()));
-      }
       //记录方法详细信息
-      sb.append(AopLogUtil.extractMothodInfo(pjp));
+      sb.append(AopLogUtil.extractTargetInfo(pjp,WebLog.class));
       //记录返回值详细信息
       sb.append(MessageFormat.format("return value:{} \n\t", result));
       //记录执行时间

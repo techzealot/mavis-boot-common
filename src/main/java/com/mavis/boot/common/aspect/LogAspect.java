@@ -1,7 +1,9 @@
 package com.mavis.boot.common.aspect;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.mavis.boot.common.annotation.Log;
 import com.mavis.boot.common.util.AopLogUtil;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Objects;
@@ -46,11 +48,6 @@ public class LogAspect {
     MethodSignature methodSignature = (MethodSignature) signature;
     Method method = methodSignature.getMethod();
     String methodName = method.getName();
-    //获取注解信息
-    Log log = null;
-    if (method.isAnnotationPresent(Log.class)) {
-      log = method.getAnnotation(Log.class);
-    }
     //开始计时
     stopWatch.start(methodName);
     Object result = null;
@@ -63,11 +60,7 @@ public class LogAspect {
       long totalTimeMillis = stopWatch.getTotalTimeMillis();
       //记录日志
       StringBuilder sb = new StringBuilder(200);
-      if (Objects.nonNull(log)) {
-        sb.append(MessageFormat
-            .format("Log info > value:{0},description:{1} \n\t", log.value(), log.description()));
-      }
-      sb.append(AopLogUtil.extractMothodInfo(pjp));
+      sb.append(AopLogUtil.extractTargetInfo(pjp,Log.class));
       sb.append(MessageFormat.format("return value:{} \n\t", result));
       sb.append(stopWatch.prettyPrint());
       //如果执行时间超过限制,输出warn日志，否则输出info日志

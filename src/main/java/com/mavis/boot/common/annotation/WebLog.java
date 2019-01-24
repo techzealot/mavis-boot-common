@@ -11,8 +11,10 @@ import java.lang.annotation.Target;
  * @date: 2019-01-23 10:17
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface WebLog {
-  String value();
-  String description();
+
+  String value() default "";
+
+  String description() default "";
 }
