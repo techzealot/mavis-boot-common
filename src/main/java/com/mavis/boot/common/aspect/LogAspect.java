@@ -56,13 +56,13 @@ public class LogAspect {
       return null;
     } finally {
       stopWatch.stop();
-      long totalTimeMillis = stopWatch.getTotalTimeMillis();
       //记录日志
       StringBuilder sb = new StringBuilder(200);
       sb.append(AopLogUtil.extractTargetInfo(pjp, Log.class));
       sb.append(MessageFormat.format("return value:{};;", result));
       sb.append(stopWatch.toString());
       //如果执行时间超过限制,输出warn日志，否则输出info日志
+      long totalTimeMillis = stopWatch.getTotalTimeMillis();
       if (totalTimeMillis > warnLimit) {
         log.warn("{}", sb);
       } else {
