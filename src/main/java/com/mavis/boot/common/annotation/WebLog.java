@@ -17,4 +17,5 @@ public @interface WebLog {
   String value() default "";
 
   String description() default "";
+
 }

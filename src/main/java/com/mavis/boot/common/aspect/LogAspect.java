@@ -1,12 +1,9 @@
 package com.mavis.boot.common.aspect;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.mavis.boot.common.annotation.Log;
 import com.mavis.boot.common.util.AopLogUtil;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.Objects;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -53,24 +50,25 @@ public class LogAspect {
     Object result = null;
     try {
       result = pjp.proceed();
+      return result;
     } catch (Throwable throwable) {
-      LogAspect.log.error(methodName, throwable);
+      log.error(methodName, throwable);
+      return null;
     } finally {
       stopWatch.stop();
       long totalTimeMillis = stopWatch.getTotalTimeMillis();
       //记录日志
       StringBuilder sb = new StringBuilder(200);
-      sb.append(AopLogUtil.extractTargetInfo(pjp,Log.class));
-      sb.append(MessageFormat.format("return value:{} \n\t", result));
-      sb.append(stopWatch.prettyPrint());
+      sb.append(AopLogUtil.extractTargetInfo(pjp, Log.class));
+      sb.append(MessageFormat.format("return value:{};;", result));
+      sb.append(stopWatch.toString());
       //如果执行时间超过限制,输出warn日志，否则输出info日志
       if (totalTimeMillis > warnLimit) {
-        LogAspect.log.warn("{}", sb);
+        log.warn("{}", sb);
       } else {
-        LogAspect.log.info("{}", sb);
+        log.info("{}", sb);
       }
       MDC.clear();
     }
-    return result;
   }
 }

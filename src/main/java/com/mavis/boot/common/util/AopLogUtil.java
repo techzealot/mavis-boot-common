@@ -36,17 +36,17 @@ public class AopLogUtil {
     }
     StringBuilder sb = new StringBuilder(128);
     //占位值为null时，会原样输出占位符，不会抛出NPE
-    sb.append(MessageFormat.format("className:{0} \n\t", className));
+    sb.append(MessageFormat.format("className:{0} ;;", className));
     if (Objects.nonNull(classLevelAnno)) {
       sb.append(MessageFormat
-          .format("class annotation info > {0} \n\t", classLevelAnno));
+          .format("class annotation info > {0} ;;", classLevelAnno));
     }
-    sb.append(MessageFormat.format("methodName:{0} \n\t", methodName));
+    sb.append(MessageFormat.format("methodName:{0} ;;", methodName));
     if (Objects.nonNull(methodLevelAnno)) {
       sb.append(MessageFormat
-          .format("method annotation info > {0} \n\t", methodLevelAnno));
+          .format("method annotation info > {0} ;;", methodLevelAnno));
     }
-    sb.append(MessageFormat.format("method args: \n {0} \n\t", pjp.getArgs()));
+    sb.append(MessageFormat.format("method args:  {0} ;;", pjp.getArgs()));
     return sb;
   }
 

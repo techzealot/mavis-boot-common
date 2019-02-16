@@ -4,7 +4,6 @@ import com.mavis.boot.common.annotation.WebLog;
 import com.mavis.boot.common.util.AopLogUtil;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.Objects;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -54,8 +53,10 @@ public class WebLogAspect {
     Object result = null;
     try {
       result = pjp.proceed();
+      return result;
     } catch (Throwable throwable) {
       log.error(methodName, throwable);
+      return null;
     } finally {
       stopWatch.stop();
       long totalTimeMillis = stopWatch.getTotalTimeMillis();
@@ -67,13 +68,13 @@ public class WebLogAspect {
       if (attributes != null) {
         request = attributes.getRequest();
       }
-      sb.append(MessageFormat.format("request info:{0} \n\t", request));
+      sb.append(MessageFormat.format("request info:{0} ;;", request));
       //记录方法详细信息
-      sb.append(AopLogUtil.extractTargetInfo(pjp,WebLog.class));
+      sb.append(AopLogUtil.extractTargetInfo(pjp, WebLog.class));
       //记录返回值详细信息
-      sb.append(MessageFormat.format("return value:{} \n\t", result));
+      sb.append(MessageFormat.format("return value:{} ;;", result));
       //记录执行时间
-      sb.append(stopWatch.prettyPrint());
+      sb.append(stopWatch.toString());
       //如果执行时间超过限制,输出warn日志，否则输出info日志
       if (totalTimeMillis > warnLimit) {
         log.warn("{}", sb);
@@ -82,6 +83,5 @@ public class WebLogAspect {
       }
       MDC.clear();
     }
-    return result;
   }
 }
