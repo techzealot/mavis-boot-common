@@ -5,3 +5,4 @@ common use case for springboot
 3. validation+aop实现校验失败统一处理
 4. aop记录controller，特定注解标注的日志（入参，返回值，执行时间，执行人，方法详情、类详情）
 5. spring StopWatch记录方法执行时间
+6. RestTemplate整合HttpComponent，okhttp3，WebClient
