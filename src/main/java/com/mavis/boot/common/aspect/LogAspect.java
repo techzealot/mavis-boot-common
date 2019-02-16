@@ -27,12 +27,12 @@ import org.springframework.util.StopWatch;
 public class LogAspect {
 
   //方法执行耗时触发告警的时间上限，单位：毫秒
-  public static final int warnLimit = 1000;
+  private static final int warnLimit = 1000;
 
   /**
    * 切入点,记录log注解标记的方法的类名、方法名、执行时间、返回值、参数、request等详细信息
    */
-  @Pointcut("@annotation(com.mavis.boot.common.annotation.WebLog)")
+  @Pointcut("@annotation(com.mavis.boot.common.annotation.Log)")
   public void log() {
   }
 
