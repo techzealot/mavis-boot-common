@@ -13,17 +13,15 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.MDC;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
 /**
- * 非spring web环境日志切面，不会获取servlet request相关信息(可能没有servlet相关类)
+ * 通用日志切面，手动添加@Log注解生效，不会获取servlet request相关信息(可能没有servlet相关类)
  */
 @Component
 @Slf4j
 @Aspect
-@ConditionalOnNotWebApplication
 public class LogAspect {
 
   //方法执行耗时触发告警的时间上限，单位：毫秒
