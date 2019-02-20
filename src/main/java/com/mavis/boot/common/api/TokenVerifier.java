@@ -7,5 +7,5 @@ package com.mavis.boot.common.api;
  */
 public interface TokenVerifier {
 
-  boolean verifyToken(String token);
+    boolean verifyToken(String token);
 }

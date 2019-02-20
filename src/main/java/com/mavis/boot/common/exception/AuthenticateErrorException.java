@@ -1,13 +1,12 @@
 package com.mavis.boot.common.exception;
 
-import java.security.PrivilegedActionException;
-
 /**
  * 业务层异常-未登录或者登录过期
+ *
  * @author hfb
  * @date 2018/4/20
  */
-public class AuthenticateErrorException extends BusinessException{
+public class AuthenticateErrorException extends BusinessException {
 
     public AuthenticateErrorException() {
     }

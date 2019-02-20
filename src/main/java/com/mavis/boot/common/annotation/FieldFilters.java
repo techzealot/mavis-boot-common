@@ -7,11 +7,12 @@ import java.lang.annotation.Target;
 
 /**
  * 用于controller层方法上，过滤返回对象中的属性
- * @author xuyongchen
  *
+ * @author xuyongchen
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FieldFilters {
-    FieldFilter [] value();
+
+    FieldFilter[] value();
 }

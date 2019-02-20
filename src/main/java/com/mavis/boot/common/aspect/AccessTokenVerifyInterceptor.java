@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -19,52 +18,53 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
  */
 public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
 
-  private TokenVerifier tokenVerifier;
+    public static final String TOKEN_NAME = "access_token";
+    private TokenVerifier tokenVerifier;
 
-  public AccessTokenVerifyInterceptor(TokenVerifier tokenVerifier) {
-    this.tokenVerifier = tokenVerifier;
-  }
+    public AccessTokenVerifyInterceptor(TokenVerifier tokenVerifier) {
+        this.tokenVerifier = tokenVerifier;
+    }
 
-  public static final String TOKEN_NAME = "access_token";
-
-  /**
-   * 请求调用前处理
-   */
-  @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-      Object handler) {
-    if (handler instanceof HandlerMethod) {
-      // 加上这个注解不校验接口权限
-      NotAuthrnticated notAuthrnticated = ((HandlerMethod) handler).getMethod().getAnnotation(
-          NotAuthrnticated.class);
-      if (notAuthrnticated != null) {
+    /**
+     * 请求调用前处理
+     */
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+        Object handler) {
+        if (handler instanceof HandlerMethod) {
+            // 加上这个注解不校验接口权限
+            NotAuthrnticated notAuthrnticated = ((HandlerMethod) handler).getMethod().getAnnotation(
+                NotAuthrnticated.class);
+            if (notAuthrnticated != null) {
+                return true;
+            }
+            String token = getToken(request, TOKEN_NAME);
+            return verifyToken(token);
+        }
         return true;
-      }
-      String token = getToken(request, TOKEN_NAME);
-      return verifyToken(token);
     }
-    return true;
-  }
 
-  private String getToken(HttpServletRequest request, String tokenKey) {
-    String token = request.getParameter(tokenKey);
-    if (StringUtils.hasText(token)) {
-      return token;
+    private String getToken(HttpServletRequest request, String tokenKey) {
+        String token = request.getParameter(tokenKey);
+        if (StringUtils.hasText(token)) {
+            return token;
+        }
+        token = Optional.ofNullable(request.getAttribute(tokenKey)).map(Objects::toString)
+            .orElse("");
+        if (StringUtils.hasText(token)) {
+            return token;
+        }
+        token = Optional.ofNullable(CookieUtil.getCookieValue(tokenKey, request))
+            .map(Objects::toString)
+            .orElse("");
+        if (StringUtils.hasText(token)) {
+            return token;
+        }
+        return "";
     }
-    token = Optional.ofNullable(request.getAttribute(tokenKey)).map(Objects::toString).orElse("");
-    if (StringUtils.hasText(token)) {
-      return token;
-    }
-    token = Optional.ofNullable(CookieUtil.getCookieValue(tokenKey, request)).map(Objects::toString)
-        .orElse("");
-    if (StringUtils.hasText(token)) {
-      return token;
-    }
-    return "";
-  }
 
-  private boolean verifyToken(String token){
-    return tokenVerifier.verifyToken(token);
-  }
+    private boolean verifyToken(String token) {
+        return tokenVerifier.verifyToken(token);
+    }
 
 }

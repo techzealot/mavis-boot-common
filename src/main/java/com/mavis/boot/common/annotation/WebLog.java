@@ -14,8 +14,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface WebLog {
 
-  String value() default "";
+    String value() default "";
 
-  String description() default "";
+    String description() default "";
 
 }

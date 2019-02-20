@@ -11,32 +11,32 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class CookieUtil {
 
-  /**
-   * 根据Cookie名称得到Cookie对象，不存在该对象则返回Null
-   */
-  public static Cookie getCookie(String name, HttpServletRequest request) {
-    Cookie[] cookies = request.getCookies();
-    if (cookies == null || cookies.length < 1) {
-      return null;
+    /**
+     * 根据Cookie名称得到Cookie对象，不存在该对象则返回Null
+     */
+    public static Cookie getCookie(String name, HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null || cookies.length < 1) {
+            return null;
+        }
+        for (Cookie c : cookies) {
+            if (Objects.equals(c.getName(), name)) {
+                return c;
+            }
+        }
+        return null;
     }
-    for (Cookie c : cookies) {
-      if (Objects.equals(c.getName(), name)) {
-        return c;
-      }
-    }
-    return null;
-  }
 
-  /**
-   * 根据Cookie名称直接得到Cookie值
-   */
-  public static String getCookieValue(String name, HttpServletRequest request) {
-    Cookie cookie = getCookie(name, request);
-    if (cookie != null) {
-      return cookie.getValue();
+    /**
+     * 根据Cookie名称直接得到Cookie值
+     */
+    public static String getCookieValue(String name, HttpServletRequest request) {
+        Cookie cookie = getCookie(name, request);
+        if (cookie != null) {
+            return cookie.getValue();
+        }
+        return "";
     }
-    return "";
-  }
 
 
 }

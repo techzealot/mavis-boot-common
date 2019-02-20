@@ -10,7 +10,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(FieldFilters.class)   // 让方法支持多重@FieldFilter 注解
 public @interface FieldFilter {
+
     Class<?> type();
+
     String[] includes() default {};
+
     String[] excludes() default {};
 }

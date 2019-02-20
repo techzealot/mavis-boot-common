@@ -24,49 +24,49 @@ import org.springframework.util.StopWatch;
 @Aspect
 public class LogAspect {
 
-  //方法执行耗时触发告警的时间上限，单位：毫秒
-  private static final int warnLimit = 1000;
+    //方法执行耗时触发告警的时间上限，单位：毫秒
+    private static final int warnLimit = 1000;
 
-  /**
-   * 切入点,记录log注解标记的方法的类名、方法名、执行时间、返回值、参数、request等详细信息
-   */
-  @Pointcut("@annotation(com.mavis.boot.common.annotation.Log)")
-  public void log() {
-  }
-
-  @Around(value = "log()")
-  public Object doBefore(ProceedingJoinPoint pjp) {
-    MDC.put("TRACE_ID", UUID.randomUUID().toString());
-    StopWatch stopWatch = new StopWatch();
-    //获取方法签名
-    Signature signature = pjp.getSignature();
-    MethodSignature methodSignature = (MethodSignature) signature;
-    Method method = methodSignature.getMethod();
-    String methodName = method.getName();
-    //开始计时
-    stopWatch.start(methodName);
-    Object result = null;
-    try {
-      result = pjp.proceed();
-      return result;
-    } catch (Throwable throwable) {
-      log.error(methodName, throwable);
-      return null;
-    } finally {
-      stopWatch.stop();
-      //记录日志
-      StringBuilder sb = new StringBuilder(200);
-      sb.append(AopLogUtil.extractTargetInfo(pjp, Log.class));
-      sb.append(MessageFormat.format("return value:{};;", result));
-      sb.append(stopWatch.toString());
-      //如果执行时间超过限制,输出warn日志，否则输出info日志
-      long totalTimeMillis = stopWatch.getTotalTimeMillis();
-      if (totalTimeMillis > warnLimit) {
-        log.warn("{}", sb);
-      } else {
-        log.info("{}", sb);
-      }
-      MDC.clear();
+    /**
+     * 切入点,记录log注解标记的方法的类名、方法名、执行时间、返回值、参数、request等详细信息
+     */
+    @Pointcut("@annotation(com.mavis.boot.common.annotation.Log)")
+    public void log() {
     }
-  }
+
+    @Around(value = "log()")
+    public Object doBefore(ProceedingJoinPoint pjp) {
+        MDC.put("TRACE_ID", UUID.randomUUID().toString());
+        StopWatch stopWatch = new StopWatch();
+        //获取方法签名
+        Signature signature = pjp.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        Method method = methodSignature.getMethod();
+        String methodName = method.getName();
+        //开始计时
+        stopWatch.start(methodName);
+        Object result = null;
+        try {
+            result = pjp.proceed();
+            return result;
+        } catch (Throwable throwable) {
+            log.error(methodName, throwable);
+            return null;
+        } finally {
+            stopWatch.stop();
+            //记录日志
+            StringBuilder sb = new StringBuilder(200);
+            sb.append(AopLogUtil.extractTargetInfo(pjp, Log.class));
+            sb.append(MessageFormat.format("return value:{};;", result));
+            sb.append(stopWatch.toString());
+            //如果执行时间超过限制,输出warn日志，否则输出info日志
+            long totalTimeMillis = stopWatch.getTotalTimeMillis();
+            if (totalTimeMillis > warnLimit) {
+                log.warn("{}", sb);
+            } else {
+                log.info("{}", sb);
+            }
+            MDC.clear();
+        }
+    }
 }

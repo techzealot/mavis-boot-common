@@ -7,22 +7,19 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 
 @Configuration
 @ComponentScan
 @ConditionalOnWebApplication
 public class CommonWebAutoconfiguration {
 
-  /**
-   * TokenVerifier类型的bean一定要保证先创建
-   * @param tokenVerifier
-   * @return
-   */
-  @ConditionalOnBean(TokenVerifier.class)
-  @Bean
-  public AccessTokenVerifyInterceptor accessTokenVerifyInterceptor(TokenVerifier tokenVerifier) {
-    return new AccessTokenVerifyInterceptor(tokenVerifier);
-  }
+    /**
+     * TokenVerifier类型的bean一定要保证先创建
+     */
+    @ConditionalOnBean(TokenVerifier.class)
+    @Bean
+    public AccessTokenVerifyInterceptor accessTokenVerifyInterceptor(TokenVerifier tokenVerifier) {
+        return new AccessTokenVerifyInterceptor(tokenVerifier);
+    }
 
 }
